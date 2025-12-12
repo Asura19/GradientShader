@@ -116,56 +116,67 @@ struct MeshGradientView: View {
     }
 }
 
-// MARK: - 预设颜色组
-enum ColorPreset: CaseIterable {
-    case twoColors
-    case threeColors
-    case fourColors
-    
-    var colors: [Color] {
-        switch self {
-        case .twoColors:
-            return [
+// MARK: - 2色渐变 Demo
+struct TwoColorDemo: View {
+    var body: some View {
+        MeshGradientView(
+            colors: [
                 Color(red: 1.0, green: 0.4, blue: 0.7),  // 粉色
                 Color(red: 0.2, green: 0.3, blue: 0.9),  // 蓝色
-            ]
-        case .threeColors:
-            return [
+            ],
+            animation: .animated(speed: 1.0)
+        )
+    }
+}
+
+// MARK: - 3色渐变 Demo
+struct ThreeColorDemo: View {
+    var body: some View {
+        MeshGradientView(
+            colors: [
                 Color(red: 0.9, green: 0.4, blue: 0.3),  // 桃色
                 Color(red: 0.2, green: 0.1, blue: 0.6),  // 紫色
                 Color(red: 0.0, green: 0.8, blue: 0.8),  // 青色
-            ]
-        case .fourColors:
-            return [
+            ],
+            animation: .animated(speed: 1.0)
+        )
+    }
+}
+
+// MARK: - 4色渐变 Demo
+struct FourColorDemo: View {
+    var body: some View {
+        MeshGradientView(
+            colors: [
                 Color(red: 0.95, green: 0.3, blue: 0.5), // 玫红
                 Color(red: 1.0, green: 0.8, blue: 0.2),  // 金黄
                 Color(red: 0.2, green: 0.1, blue: 0.5),  // 深紫
                 Color(red: 0.0, green: 0.7, blue: 0.9),  // 天蓝
-            ]
-        }
-    }
-    
-    var title: String {
-        switch self {
-        case .twoColors: return "2色"
-        case .threeColors: return "3色"
-        case .fourColors: return "4色"
-        }
+            ],
+            animation: .animated(speed: 1.0)
+        )
     }
 }
 
 // MARK: - 主视图
 struct ContentView: View {
-    @State private var selectedPreset: ColorPreset = .threeColors
+    @State private var selectedDemo: Int = 3
     
     var body: some View {
         ZStack {
-            // 使用封装的 MeshGradientView
-            MeshGradientView(
-                colors: selectedPreset.colors,
-                opacity: 1.0,
-                animation: .animated(speed: 1.0)
-            )
+            // 根据选择显示不同的 Demo
+            Group {
+                switch selectedDemo {
+                case 2:
+                    TwoColorDemo()
+                case 3:
+                    ThreeColorDemo()
+                case 4:
+                    FourColorDemo()
+                default:
+                    ThreeColorDemo()
+                }
+            }
             .ignoresSafeArea()
             
             // 控制面板
@@ -173,19 +184,19 @@ struct ContentView: View {
                 Spacer()
                 
                 HStack(spacing: 8) {
-                    ForEach(ColorPreset.allCases, id: \.self) { preset in
+                    ForEach([2, 3, 4], id: \.self) { count in
                         Button(action: {
                             withAnimation(.easeInOut(duration: 0.3)) {
-                                selectedPreset = preset
+                                selectedDemo = count
                             }
                         }) {
-                            Text(preset.title)
+                            Text("\(count)色")
                                 .font(.system(size: 14, weight: .medium))
-                                .foregroundColor(selectedPreset == preset ? .black : .white.opacity(0.9))
+                                .foregroundColor(selectedDemo == count ? .black : .white.opacity(0.9))
                                 .frame(width: 50, height: 32)
                                 .background(
                                     RoundedRectangle(cornerRadius: 8)
-                                        .fill(selectedPreset == preset ? Color.white.opacity(0.9) : Color.white.opacity(0.15))
+                                        .fill(selectedDemo == count ? Color.white.opacity(0.9) : Color.white.opacity(0.15))
                                 )
                         }
                     }
