@@ -1,16 +1,9 @@
-//
-//  Metal.metal
-//  GradientShader
-//
-//  Created by Minsang Choi on 12/11/25.
-//
-
 #include <metal_stdlib>
 #include <SwiftUI/SwiftUI.h>
 
 using namespace metal;
 
-[[ stitchable ]] half4 meshGradient(
+[[ stitchable ]] half4 meshGradient3(
     float2 pos,
     SwiftUI::Layer l,
     float4 bounds,
